@@ -49,7 +49,7 @@ func (s *Server) ServeHTTP() {
 	if err != nil {
 		log.Fatalf("FATAL: listen (%s, %s) failed - %s", networkType, listenAddr, err)
 	}
-	log.Printf("HTTP: listening on %s", listenAddr)
+	log.Printf("HTTP: listening on http://%s", listenAddr)
 
 	server := &http.Server{Handler: s.Handler}
 	err = server.Serve(listener)

@@ -31,6 +31,7 @@ type Options struct {
 	TLSKeyFile   string `flag:"tls-key" cfg:"tls_key_file"`
 
 	AuthenticatedEmailsFile  string   `flag:"authenticated-emails-file" cfg:"authenticated_emails_file"`
+	MattermostHost           string   `flag:"mattermost-host" cfg:"mattermost_host"`
 	AzureTenant              string   `flag:"azure-tenant" cfg:"azure_tenant"`
 	EmailDomains             []string `flag:"email-domain" cfg:"email_domains"`
 	WhitelistDomains         []string `flag:"whitelist-domain" cfg:"whitelist_domains" env:"OAUTH2_PROXY_WHITELIST_DOMAINS"`
@@ -270,6 +271,12 @@ func parseProviderInfo(o *Options, msgs []string) []string {
 
 	o.provider = providers.New(o.Provider, p)
 	switch p := o.provider.(type) {
+	case *providers.MattermostProvider:
+		if o.MattermostHost == "" {
+			msgs = append(msgs, "mattermost provider requires mattermost-host")
+		} else {
+			p.Configure(o.MattermostHost)
+		}
 	case *providers.AzureProvider:
 		p.Configure(o.AzureTenant)
 	case *providers.GitHubProvider:
