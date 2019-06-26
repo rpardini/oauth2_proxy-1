@@ -32,20 +32,20 @@ func (p *MewebProvider) Configure(host string) {
 	if p.LoginURL.String() == "" {
 		p.LoginURL = &url.URL{Scheme: "https",
 			Host: p.Host,
-			Path: "/oauth/authorize",
+			Path: "/do/developer/oauth.mvc",
 			// ?granted_scopes=true
 		}
 	}
 	if p.RedeemURL.String() == "" {
 		p.RedeemURL = &url.URL{Scheme: "https",
 			Host: p.Host,
-			Path: "/oauth/access_token",
+			Path: "/do/developer/oauth.mvc/token",
 		}
 	}
 	if p.ProfileURL.String() == "" {
 		p.ProfileURL = &url.URL{Scheme: "https",
 			Host: p.Host,
-			Path: "/api/v4/users/me",
+			Path: "/do/api/v1/users/GetCurrentUser",
 		}
 	}
 	if p.ValidateURL.String() == "" {
