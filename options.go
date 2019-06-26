@@ -42,6 +42,8 @@ type Options struct {
 	TLSKeyFile      string `flag:"tls-key-file" cfg:"tls_key_file" env:"OAUTH2_PROXY_TLS_KEY_FILE"`
 
 	AuthenticatedEmailsFile  string   `flag:"authenticated-emails-file" cfg:"authenticated_emails_file" env:"OAUTH2_PROXY_AUTHENTICATED_EMAILS_FILE"`
+	MattermostHost           string   `flag:"mattermost-host" cfg:"mattermost_host" env:"OAUTH2_PROXY_MATTERMOST_HOST"`
+	MewebHost                string   `flag:"meweb-host" cfg:"meweb_host" env:"OAUTH2_PROXY_MEWEB_HOST"`
 	KeycloakGroup            string   `flag:"keycloak-group" cfg:"keycloak_group" env:"OAUTH2_PROXY_KEYCLOAK_GROUP"`
 	AzureTenant              string   `flag:"azure-tenant" cfg:"azure_tenant" env:"OAUTH2_PROXY_AZURE_TENANT"`
 	BitbucketTeam            string   `flag:"bitbucket-team" cfg:"bitbucket_team" env:"OAUTH2_PROXY_BITBUCKET_TEAM"`
@@ -398,6 +400,18 @@ func parseProviderInfo(o *Options, msgs []string) []string {
 
 	o.provider = providers.New(o.Provider, p)
 	switch p := o.provider.(type) {
+	case *providers.MattermostProvider:
+		if o.MattermostHost == "" {
+			msgs = append(msgs, "mattermost provider requires mattermost-host")
+		} else {
+			p.Configure(o.MattermostHost)
+		}
+	case *providers.MewebProvider:
+		if o.MewebHost == "" {
+			msgs = append(msgs, "meweb provider requires meweb-host")
+		} else {
+			p.Configure(o.MewebHost)
+		}
 	case *providers.AzureProvider:
 		p.Configure(o.AzureTenant)
 	case *providers.GitHubProvider:
